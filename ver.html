@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Counselor Suite | Class Manager Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #e9eff7 0%, #dbe4f0 100%);
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+        }
+
+        /* main container */
+        .counselor-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.96);
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.25), 0 2px 8px rgba(0,0,0,0.05);
+            overflow: hidden;
+            backdrop-filter: blur(0px);
+            transition: all 0.2s;
+        }
+
+        /* header */
+        .hero-header {
+            background: linear-gradient(115deg, #1f2b4e 0%, #2a3f6e 100%);
+            padding: 1.8rem 2.5rem;
+            color: white;
+            border-bottom: 3px solid #ffc107;
+        }
+        .hero-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .hero-header h1 span {
+            background: #ffc107;
+            color: #1f2b4e;
+            font-size: 1rem;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+        .badge-class {
+            background: rgba(255,255,255,0.2);
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 40px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* tab navigation */
+        .tab-bar {
+            display: flex;
+            background: #f8fafd;
+            border-bottom: 1px solid #e2edf7;
+            padding: 0 1rem;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 1rem 1.8rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4a5b7a;
+            cursor: pointer;
+            transition: 0.2s;
+            border-radius: 40px 40px 0 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn i { font-style: normal; font-weight: 500; }
+        .tab-btn:hover {
+            background: #eef3fc;
+            color: #1f3a6b;
+        }
+        .tab-btn.active {
+            color: #1f4f9e;
+            background: white;
+            border-bottom: 3px solid #1f4f9e;
+            box-shadow: 0 -2px 6px rgba(0,0,0,0.02);
+        }
+
+        /* content panels */
+        .tab-pane {
+            display: none;
+            padding: 2rem 2rem 2.5rem 2rem;
+            animation: fadeSlide 0.25s ease-out;
+        }
+        .tab-pane.active-pane {
+            display: block;
+        }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* table styles */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 20px;
+            border: 1px solid #eef2f8;
+            background: white;
+            box-shadow: 0 6px 12px -8px rgba(0,0,0,0.08);
+            margin-top: 1rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        th {
+            background: #f0f4fa;
+            padding: 1rem 1rem;
+            text-align: left;
+            font-weight: 700;
+            color: #1e2f4b;
+            border-bottom: 1px solid #e0e9f2;
+        }
+        td {
+            padding: 1rem 1rem;
+            border-bottom: 1px solid #ecf3f9;
+            vertical-align: middle;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .student-row:hover {
+            background: #fafcff;
+        }
+
+        /* buttons */
+        .btn-icon {
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 32px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+            margin: 0 3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-view {
+            background: #eef2ff;
+            color: #2c5f9a;
+        }
+        .btn-view:hover {
+            background: #dce5fc;
+            transform: scale(0.97);
+        }
+        .btn-approve {
+            background: #e1f7ea;
+            color: #1e6f3f;
+        }
+        .btn-approve:hover {
+            background: #c8f0d9;
+        }
+        .btn-reject {
+            background: #ffe6e5;
+            color: #bc3f2e;
+        }
+        .btn-reject:hover {
+            background: #ffd6d4;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        .status-approved { background: #dcfce7; color: #15803d; }
+        .status-pending  { background: #fff3e3; color: #b45309; }
+        .status-rejected { background: #ffe4e2; color: #b91c1c; }
+
+        /* modal backdrop */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+ backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.2s, opacity 0.2s;
+        }
+        .modal-overlay.active-modal {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-card {
+            background: white;
+            max-width: 520px;
+            width: 90%;
+            border-radius: 32px;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+            overflow: hidden;
+            transform: scale(0.96);
+            transition: transform 0.2s;
+        }
+        .active-modal .modal-card {
+            transform: scale(1);
+        }
+        .modal-header {
+            background: #1f2b4e;
+            color: white;
+            padding: 1.2rem 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        .close-modal {
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: 0.1s;
+        }
+        .close-modal:hover {
+            opacity: 0.7;
+        }
+        .modal-body {
+            padding: 1.8rem;
+        }
+        .details-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .detail-item {
+            display: flex;
+            border-bottom: 1px solid #eef2f8;
+            padding-bottom: 10px;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+        }
+        .detail-label {
+            font-weight: 700;
+            color: #2c3e66;
+            width: 130px;
+        }
+        .detail-value {
+            color: #1e293b;
+            font-weight: 500;
+        }
+        .empty-row {
+            text-align: center;
+            padding: 2rem;
+            color: #6c7a91;
+            font-style: italic;
+        }
+        .action-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        h2 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #0c2b4b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .subhead {
+            color: #4a627a;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 700px) {
+            .counselor-container { margin: 0; }
+            .tab-btn { padding: 0.7rem 1rem; font-size: 0.85rem; }
+            td, th { padding: 0.7rem; font-size: 0.8rem; }
+            .action-group { flex-direction: column; gap: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="counselor-container">
+    <div class="hero-header">
+        <span>CLASS COORDINATOR</span></h1>
+        <div class="badge-class"> Assigned Class : B.Tech CSE (A) - Section A | Batch 2024-28</div>
+    </div>
+
+    <div class="tab-bar">
+        <button class="tab-btn active" data-tab="existingTab"> Existing Students List</button>
+        <button class="tab-btn" data-tab="approvedTab"> View Approvals List</button>
+        <button class="tab-btn" data-tab="pendingTab"> View Pending Approvals</button>
+    </div>
+
+    <!-- PANE 1: EXISTING STUDENTS (class students list) -->
+    <div id="existingTab" class="tab-pane active-pane">
+        <h2> Class Roster · Existing Students</h2>
+        <div class="subhead">All enrolled students belonging to your class (approved & active)</div>
+        <div class="table-wrapper" id="existingTableWrapper">
+            <!-- dynamic table injected -->
+        </div>
+    </div>
+
+    <!-- PANE 2: APPROVED STUDENTS (View Approvals List) -->
+    <div id="approvedTab" class="tab-pane">
+        <h2> Approved Students (Your Class)</h2>
+        <div class="subhead">List of students who have been granted approval</div>
+        <div class="table-wrapper" id="approvedTableWrapper"></div>
+    </div>
+
+    <!-- PANE 3: PENDING APPROVALS -->
+    <div id="pendingTab" class="tab-pane">
+        <h2> Pending Approval Requests</h2>
+        <div class="subhead">New signups waiting for your decision (Approve / Reject)</div>
+        <div class="table-wrapper" id="pendingTableWrapper"></div>
+    </div>
+</div>
+
+<!-- MODAL for student details -->
+<div id="detailModal" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3> Student Full Details</h3>
+            <span class="close-modal" id="closeModalBtn">&times;</span>
+        </div>
+        <div class="modal-body" id="modalStudentContent">
+            <!-- populated dynamically -->
+        </div>
+    </div>
+</div>
+
+<script>
+    const currentUser = (() => {
+        try {
+            return JSON.parse(localStorage.getItem('userData') || 'null');
+        } catch (error) {
+            return null;
+        }
+    })();
+
+    if (!currentUser || currentUser.role !== 'verifier') {
+        window.location.replace('login.html');
+    }
+
+    // --------------------------------------------------------------
+    // COUNSELOR JAVA-LIKE BACKEND SIMULATION (in-memory data)
+    // Using pure JS to represent backend logic as required (java spirit)
+    // --------------------------------------------------------------
+    const COUNSELOR_CLASS = "B.Tech CSE (A)";
+
+    // Student Model: id, name, rollNo, email, section, semester, batch, approvalStatus
+    class Student {
+        constructor(id, name, rollNo, email, section, semester, batch, approvalStatus) {
+            this.id = id;
+            this.name = name;
+            this.rollNo = rollNo;
+            this.email = email;
+            this.section = section;
+            this.semester = semester;
+            this.batch = batch;
+            this.approvalStatus = approvalStatus; // "APPROVED", "PENDING", "REJECTED"
+        }
+    }
+
+    // ---------- DATA REPOSITORY (simulated database) ----------
+    let studentsStore = new Map();
+
+    function initializeData() {
+        // existing active students (approved)
+        studentsStore.set("s1001", new Student("s1001", "Aarav Sharma", "2402920100001", "aarav.sharma@edu.in", "A", "3rd Sem", "2024-2028", "APPROVED"));
+        studentsStore.set("s1002", new Student("s1002", "Ishita Verma", "2402920100002", "ishita.v@edu.in", "A", "3rd Sem", "2024-2028", "APPROVED"));
+        studentsStore.set("s1003", new Student("s1003", "Reyansh Nair", "2402920100003", "reyansh.n@edu.in", "A", "3rd Sem", "2024-2028", "APPROVED"));
+        studentsStore.set("s1004", new Student("s1004", "Ananya Patil", "2402920100004", "ananya.p@edu.in", "A", "3rd Sem", "2024-2028", "APPROVED"));
+        studentsStore.set("s1005", new Student("s1005", "Devansh Mehta", "2402920100005", "devansh.m@edu.in", "A", "3rd Sem", "2024-2028", "APPROVED"));
+        studentsStore.set("s1006", new Student("s1006", "Kiara Singh", "2402920100006", "kiara.s@edu.in", "A", "3rd Sem", "2024-2028", "APPROVED"));
+        
+        // pending students (new signups, belonging to same class)
+        studentsStore.set("s2001", new Student("s2001", "Nidhi Kulkarni", "2402920100007", "nidhi.k@edu.in", "A", "3rd Sem", "2024-2028", "PENDING"));
+        studentsStore.set("s2002", new Student("s2002", "Rohan Gupta", "2402920100008", "rohan.g@edu.in", "A", "3rd Sem", "2024-2028", "PENDING"));
+        studentsStore.set("s2003", new Student("s2003", "Sanya Malhotra", "2402920100009", "sanya.m@edu.in", "A", "3rd Sem", "2024-2028", "PENDING"));
+        studentsStore.set("s2004", new Student("s2004", "Kabir Singh", "2402920100010", "kabir.s@edu.in", "A", "3rd Sem", "2024-2028", "PENDING"));
+        
+        // one extra rejected example for demonstration (but not shown in pending/existing)
+        studentsStore.set("s3001", new Student("s3001", "Rejected User", "CS24999", "reject.demo@edu.in", "A", "3rd Sem", "2024-2028", "REJECTED"));
+    }
+
+    // helper : filter students by class (all students belong to counselor class anyway, but we enforce)
+    function getStudentsByClass() {
+        // all students are under same class for demo consistency
+        return Array.from(studentsStore.values()).filter(s => true);
+    }
+
+    // Existing students = APPROVED students (for counselor, they are part of class)
+    function getExistingStudentsList() {
+        return getStudentsByClass().filter(s => s.approvalStatus === "APPROVED");
+    }
+
+    // Approved List = exactly approved students (same as existing, but separate semantic)
+    function getApprovedList() {
+        return getStudentsByClass().filter(s => s.approvalStatus === "APPROVED");
+    }
+
+    // Pending Approvals = new signups with status PENDING
+    function getPendingApprovals() {
+        return getStudentsByClass().filter(s => s.approvalStatus === "PENDING");
+    }
+
+    // Approve student
+    function approveStudentById(studentId) {
+        const student = studentsStore.get(studentId);
+        if (student && student.approvalStatus === "PENDING") {
+            student.approvalStatus = "APPROVED";
+            return true;
+        }
+        return false;
+    }
+
+    // Reject student
+    function rejectStudentById(studentId) {
+        const student = studentsStore.get(studentId);
+        if (student && student.approvalStatus === "PENDING") {
+            student.approvalStatus = "REJECTED";
+            return true;
+        }
+        return false;
+    }
+
+    // get student details (view)
+    function getStudentDetails(studentId) {
+        return studentsStore.get(studentId) || null;
+    }
+
+    // ---------- UI RENDER FUNCTIONS (HTML/CSS integration) ----------
+    function renderExistingStudents() {
+        const students = getExistingStudentsList();
+        const container = document.getElementById("existingTableWrapper");
+        if (!container) return;
+        if (students.length === 0) {
+            container.innerHTML = `<div class="empty-row">✨ No existing students found.</div>`;
+            return;
+        }
+        const tableHtml = `
+            <table>
+                <thead>
+                    <tr><th>Roll No</th><th>Full Name</th><th>Email</th><th>Section</th><th>Semester</th><th>Batch</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    ${students.map(s => `
+                        <tr>
+                            <td>${escapeHtml(s.rollNo)}</td>
+                            <td>${escapeHtml(s.name)}</td>
+                            <td>${escapeHtml(s.email)}</td>
+                            <td>${escapeHtml(s.section)}</td>
+                            <td>${escapeHtml(s.semester)}</td>
+                            <td>${escapeHtml(s.batch)}</td>
+                            <td class="action-group">
+                                <button class="btn-icon btn-view" data-id="${s.id}">👁️ View Details</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+        container.innerHTML = tableHtml;
+        attachViewDetailEvents();
+    }
+
+    function renderApprovedList() {
+        const students = getApprovedList();
+        const container = document.getElementById("approvedTableWrapper");
+        if (students.length === 0) {
+            container.innerHTML = `<div class="empty-row">📭 No approved students to display.</div>`;
+            return;
+        }
+        const tableHtml = `
+            <table>
+                <thead><tr><th>Roll No</th><th>Name</th><th>Email</th><th>Section</th><th>Semester</th><th>Batch</th><th>View</th></tr></thead>
+                <tbody>
+                    ${students.map(s => `
+                        <tr>
+                            <td>${escapeHtml(s.rollNo)}</td>
+                            <td>${escapeHtml(s.name)}</td>
+                            <td>${escapeHtml(s.email)}</td>
+                            <td>${escapeHtml(s.section)}</td>
+                            <td>${escapeHtml(s.semester)}</td>
+                            <td>${escapeHtml(s.batch)}</td>
+                            <td><button class="btn-icon btn-view" data-id="${s.id}">🔍 Details</button></td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+        container.innerHTML = tableHtml;
+        attachViewDetailEvents();
+    }
+
+    function renderPendingApprovals() {
+        const pendingList = getPendingApprovals();
+        const container = document.getElementById("pendingTableWrapper");
+        if (pendingList.length === 0) {
+            container.innerHTML = `<div class="empty-row">🎉 No pending approvals! All students processed.</div>`;
+            return;
+        }
+        const tableHtml = `
+            <table>
+                <thead><tr><th>Roll No</th><th>Name</th><th>Email</th><th>Section</th><th>Semester</th><th>Batch</th><th>Actions (Approve/Reject)</th></tr></thead>
+                <tbody>
+                    ${pendingList.map(s => `
+                        <tr id="row-${s.id}">
+                            <td>${escapeHtml(s.rollNo)}</td>
+                            <td>${escapeHtml(s.name)}</td>
+                            <td>${escapeHtml(s.email)}</td>
+                            <td>${escapeHtml(s.section)}</td>
+                            <td>${escapeHtml(s.semester)}</td>
+                            <td>${escapeHtml(s.batch)}</td>
+                            <td class="action-group">
+                                <button class="btn-icon btn-view" data-id="${s.id}">👁️ View</button>
+                                <button class="btn-icon btn-approve" data-id="${s.id}">✅ Approve</button>
+                                <button class="btn-icon btn-reject" data-id="${s.id}">❌ Reject</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+        container.innerHTML = tableHtml;
+        attachPendingActionEvents();
+        attachViewDetailEvents(); // also view details on pending
+    }
+
+    // attach approve/reject handlers
+    function attachPendingActionEvents() {
+        document.querySelectorAll('#pendingTableWrapper .btn-approve').forEach(btn => {
+            btn.removeEventListener('click', handleApprove);
+            btn.addEventListener('click', handleApprove);
+        });
+        document.querySelectorAll('#pendingTableWrapper .btn-reject').forEach(btn => {
+            btn.removeEventListener('click', handleReject);
+            btn.addEventListener('click', handleReject);
+        });
+    }
+
+    function handleApprove(e) {
+        const btn = e.currentTarget;
+        const studentId = btn.getAttribute('data-id');
+        if (approveStudentById(studentId)) {
+            showToastMessage("Student approved successfully!", "success");
+            refreshAllPanels();
+        } else {
+            alert("Unable to approve. Student not pending or invalid.");
+        }
+    }
+
+    function handleReject(e) {
+        const btn = e.currentTarget;
+        const studentId = btn.getAttribute('data-id');
+        if (rejectStudentById(studentId)) {
+            showToastMessage("Student rejected.", "info");
+            refreshAllPanels();
+        } else {
+            alert("Rejection failed: student may already be processed.");
+        }
+    }
+
+    // view details modal logic
+    function attachViewDetailEvents() {
+        const viewBtns = document.querySelectorAll('.btn-view');
+        viewBtns.forEach(btn => {
+            btn.removeEventListener('click', viewDetailHandler);
+            btn.addEventListener('click', viewDetailHandler);
+        });
+    }
+
+    function viewDetailHandler(e) {
+        const btn = e.currentTarget;
+        const studentId = btn.getAttribute('data-id');
+        const student = getStudentDetails(studentId);
+        if (student) {
+            openModalWithStudent(student);
+        } else {
+            alert("Student details not found.");
+        }
+    }
+
+    function openModalWithStudent(student) {
+        const modal = document.getElementById('detailModal');
+        const contentDiv = document.getElementById('modalStudentContent');
+        contentDiv.innerHTML = `
+            <div class="details-grid">
+                <div class="detail-item"><span class="detail-label"> Full Name</span><span class="detail-value">${escapeHtml(student.name)}</span></div>
+                <div class="detail-item"><span class="detail-label"> Roll Number</span><span class="detail-value">${escapeHtml(student.rollNo)}</span></div>
+                <div class="detail-item"><span class="detail-label"> Email</span><span class="detail-value">${escapeHtml(student.email)}</span></div>
+                <div class="detail-item"><span class="detail-label"> Section</span><span class="detail-value">${escapeHtml(student.section)}</span></div>
+                <div class="detail-item"><span class="detail-label"> Semester</span><span class="detail-value">${escapeHtml(student.semester)}</span></div>
+                <div class="detail-item"><span class="detail-label"> Batch</span><span class="detail-value">${escapeHtml(student.batch)}</span></div>
+                <div class="detail-item"><span class="detail-label"> Status</span><span class="detail-value"><span class="status-badge status-${student.approvalStatus.toLowerCase()}">${student.approvalStatus}</span></span></div>
+                <div class="detail-item"><span class="detail-label"> Class</span><span class="detail-value">${COUNSELOR_CLASS}</span></div>
+            </div>
+        `;
+        modal.classList.add('active-modal');
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('detailModal');
+        modal.classList.remove('active-modal');
+    }
+
+    // refresh all visible tabs (sync after approve/reject)
+    function refreshAllPanels() {
+        const activeTabId = document.querySelector('.tab-pane.active-pane')?.id;
+        renderExistingStudents();
+        renderApprovedList();
+        renderPendingApprovals();
+        // reattach events
+        if (activeTabId === 'existingTab') attachViewDetailEvents();
+        if (activeTabId === 'approvedTab') attachViewDetailEvents();
+        if (activeTabId === 'pendingTab') {
+            attachPendingActionEvents();
+            attachViewDetailEvents();
+        }
+    }
+
+    // simple toast simulation (non-intrusive)
+    function showToastMessage(msg, type) {
+        let toast = document.createElement('div');
+        toast.innerText = msg;
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.right = '20px';
+        toast.style.backgroundColor = type === 'success' ? '#1e6f3f' : '#2c3e66';
+        toast.style.color = 'white';
+        toast.style.padding = '12px 20px';
+        toast.style.borderRadius = '40px';
+        toast.style.fontWeight = '500';
+        toast.style.zIndex = '1100';
+        toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+        toast.style.fontSize = '0.9rem';
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.remove(); }, 2200);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    // Tab switching logic
+    function initTabs() {
+        const tabs = document.querySelectorAll('.tab-btn');
+        const panes = document.querySelectorAll('.tab-pane');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetId = tab.getAttribute('data-tab');
+                // remove active classes
+                tabs.forEach(t => t.classList.remove('active'));
+                panes.forEach(p => p.classList.remove('active-pane'));
+                tab.classList.add('active');
+                const activePane = document.getElementById(targetId);
+                if (activePane) activePane.classList.add('active-pane');
+                // render specific content when switching
+                if (targetId === 'existingTab') renderExistingStudents();
+                if (targetId === 'approvedTab') renderApprovedList();
+                if (targetId === 'pendingTab') renderPendingApprovals();
+            });
+        });
+    }
+
+    // manual close modal
+    document.getElementById('closeModalBtn')?.addEventListener('click', closeModal);
+    window.addEventListener('click', (e) => {
+        const modal = document.getElementById('detailModal');
+        if (e.target === modal) closeModal();
+    });
+
+    // initial load & data init
+    initializeData();
+    renderExistingStudents();
+    renderApprovedList();
+    renderPendingApprovals();
+    initTabs();
+
+    // expose global refresh after approve/reject is already handled
+    window.refreshPanels = refreshAllPanels;
+</script>
+</body>
+</html>

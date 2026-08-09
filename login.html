@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>smartSchedule | Unified Academic Portal</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        /* Main Card - Wider width */
+        .portal-card {
+            width: 100%;
+            max-width: 620px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 36px;
+            padding: 36px 34px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        /* Role Tabs */
+        .role-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 6px;
+            border-radius: 60px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab i {
+            width: 18px;
+            height: 18px;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(59, 130, 246, 0.2);
+            color: white;
+        }
+
+        /* Form Container */
+        .form-container {
+            transition: all 0.3s ease;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #cbd5e1;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: #64748b;
+            pointer-events: none;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            font-size: 14px;
+            color: #f1f5f9;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 16px;
+        }
+
+        select option {
+            background: #1e293b;
+            color: #f1f5f9;
+        }
+
+        input:focus, select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        /* Double Input Group - Side by side properly */
+        .double-input {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .double-input .input-wrapper {
+            flex: 1;
+        }
+
+        .double-input span {
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 0 4px;
+        }
+
+        /* Dynamic Fields Animation */
+        .dynamic-fields {
+            animation: fadeSlide 0.3s ease;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            color: #cbd5e1;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        /* Footer Links */
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .link {
+            color: #60a5fa;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .link:hover {
+            color: #a78bfa;
+            text-decoration: underline;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 28px 0 22px;
+            color: #475569;
+            font-size: 12px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #334155;
+            margin: 0 14px;
+        }
+
+        /* Alert Message */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert.show {
+            display: flex;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid #22c55e;
+            color: #86efac;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #fecaca;
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid #3b82f6;
+            color: #93c5fd;
+        }
+
+        /* Hidden Class */
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 680px) {
+            .portal-card {
+                max-width: 100%;
+                padding: 28px 24px;
+                margin: 16px;
+            }
+            .double-input {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .double-input span {
+                display: none;
+            }
+            .tab {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .portal-card {
+                padding: 24px 20px;
+            }
+            .role-tabs {
+                gap: 8px;
+            }
+            .tab {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portal-card">
+        <div class="header">
+            <div class="logo-icon">
+                <i data-lucide="graduation-cap" width="32" height="32" style="color: white;"></i>
+            </div>
+            <h1>smartSchedule</h1>
+            <p>secure academic access portal</p>
+        </div>
+
+        <div class="form-group">
+   
+</div>
+
+        <!-- Alert Message -->
+        <div id="alertMessage" class="alert"></div>
+
+        <!-- Login Form (UNCHANGED: uses Email for all roles, no extra fields) -->
+        <div id="loginForm" class="form-container">
+            <form onsubmit="handleLogin(event)">
+                <div id="dynamicFields" class="dynamic-fields">
+                    <!-- Admin login: Email only -->
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="mail" width="18" height="18"></i>
+                            <input type="email" id="adminEmail" placeholder="admin@university.edu">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="lock" width="18" height="18"></i>
+                        <input type="password" id="loginPassword" placeholder="Enter your password">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i data-lucide="log-in" width="18" height="18"></i>
+                    Log In
+                </button>
+
+                <div class="form-footer">
+                    <a href="#" class="link" onclick="showForgotPassword(event)">forgot password?</a>
+                    <a href="#" class="link" onclick="showSignup(event)">create new account</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Signup Form (MODIFIED: Removed Admin ID and Faculty ID fields, kept Department for faculty, Roll/Semester/Section for student) -->
+        <div id="signupForm" class="form-container hidden">
+            <form onsubmit="handleSignup(event)">
+                <div class="form-group">
+    <label>Select Role</label>
+    <div class="input-wrapper">
+        <i data-lucide="users"></i>
+        <select id="signupRole" onchange="updateSignupFields()" required>
+            <option value="">Select Role</option>
+            <option value="timetable">Timetable Committee</option>
+            <option value="hr">HR</option>
+            <option value="hod">HOD</option>
+            <option value="director">Director</option>
+            <option value="faculty">Faculty</option>
+            <option value="student">Student</option>
+        </select>
+    </div>
+</div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="user" width="18" height="18"></i>
+                        <input type="text" id="signupName" placeholder="John Doe" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="mail" width="18" height="18"></i>
+                        <input type="email" id="signupEmail" placeholder="student@university.edu" required>
+                    </div>
+                </div>
+
+                <div id="signupDynamicFields" class="dynamic-fields"></div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="lock" width="18" height="18"></i>
+                        <input type="password" id="signupPassword" placeholder="Create a password" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="lock-key" width="18" height="18"></i>
+                        <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i data-lucide="user-plus" width="18" height="18"></i>
+                    Create Account
+                </button>
+
+                <div class="form-footer">
+                    <a href="#" class="link" onclick="showLogin(event)">← Back to Login</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Forgot Password Form -->
+        <div id="forgotForm" class="form-container hidden">
+            <form onsubmit="handleForgotPassword(event)">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="mail" width="18" height="18"></i>
+                        <input type="email" id="forgotEmail" placeholder="Enter your registered email" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i data-lucide="send" width="18" height="18"></i>
+                    Send Reset Link
+                </button>
+
+                <div class="form-footer">
+                    <a href="#" class="link" onclick="showLogin(event)">← Back to Login</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="divider">
+            <span>Secure Access</span>
+        </div>
+
+        <button class="btn-secondary" onclick="showGoogleLogin()">
+            <i data-lucide="chrome" width="16" height="16"></i>
+            Continue with Google Workspace
+        </button>
+    </div>
+
+    <script>
+        let currentRole = 'admin';
+        let currentMode = 'login';
+
+        const DEMO_USERS = {
+            'student@college.edu': { password: 'student123', role: 'student' },
+            'verifier@college.cc': { password: 'verifier123', role: 'verifier' },
+            'hod@college.edu': { password: 'hod123', role: 'hod' }
+        };
+
+        function getStoredUser() {
+            try {
+                return JSON.parse(localStorage.getItem('userData') || 'null');
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function getUserByCredentials(email, password) {
+            const normalizedEmail = (email || '').trim().toLowerCase();
+            if (!normalizedEmail || !password) return null;
+            const user = DEMO_USERS[normalizedEmail];
+            if (!user) return null;
+            return user.password === password ? user : null;
+        }
+
+        lucide.createIcons();
+
+        function switchRole(role) {
+            currentRole = role;
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.innerText.toLowerCase().includes(role)) {
+                    tab.classList.add('active');
+                }
+            });
+            if (currentMode === 'login') {
+                updateLoginFields();
+            } else if (currentMode === 'signup') {
+                updateSignupFields();
+            }
+            lucide.createIcons();
+        }
+
+        // LOGIN FIELDS: REMAIN COMPLETELY UNCHANGED (Email only for all roles)
+       function updateLoginFields() {
+    const container = document.getElementById('dynamicFields');
+    container.innerHTML = `
+        <div class="form-group">
+            <label>Email Address</label>
+            <div class="input-wrapper">
+                <i data-lucide="mail"></i>
+                <input type="email" id="loginEmail" placeholder="Enter your email">
+            </div>
+        </div>
+    `;
+    lucide.createIcons();
+}
+
+        // SIGNUP FIELDS: MODIFIED - Removed Admin ID and Faculty ID fields, kept department for faculty, kept roll/semester/section for student
+       function updateSignupFields() {
+    const role = document.getElementById('signupRole').value;
+    const container = document.getElementById('signupDynamicFields');
+    container.innerHTML = '';
+
+    if (role === 'faculty') {
+        container.innerHTML = `
+            <div class="form-group">
+                <label>Department</label>
+                <div class="input-wrapper">
+                    <i data-lucide="building"></i>
+                    <input type="text" id="signupDepartment" placeholder="Enter department">
+                </div>
+            </div>
+        `;
+    }
+
+    else if (role === 'student') {
+        container.innerHTML = `
+            <div class="form-group">
+                <label>Roll Number</label>
+                <div class="input-wrapper">
+                    <i data-lucide="hash"></i>
+                    <input type="text" id="signupRollNumber">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Semester</label>
+                <div class="input-wrapper">
+                    <i data-lucide="book-open"></i>
+                    <select id="signupSemester">
+                        <option value="">Select Semester</option>
+                        <option>1st</option><option>2nd</option>
+                        <option>3rd</option><option>4th</option>
+                        <option>5th</option><option>6th</option>
+                        <option>7th</option><option>8th</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Section</label>
+                <div class="input-wrapper">
+                    <i data-lucide="users"></i>
+                    <input type="text" id="signupSection">
+                </div>
+            </div>
+        `;
+    }
+
+    // Other roles (Timetable, HR, HOD, Director) → no extra fields
+
+    lucide.createIcons();
+}
+
+        // Helper functions for login (unchanged)
+        function getLoginEmail() {
+            return (document.getElementById('loginEmail')?.value || document.getElementById('adminEmail')?.value || '').trim();
+        }
+
+        // Helper functions for signup (updated to reflect removed ID fields)
+        function getSignupDepartmentValue() {
+            const select = document.getElementById('signupDepartmentSelect');
+            const text = document.getElementById('signupDepartmentText');
+            return select?.value || text?.value || '';
+        }
+
+        function getSignupSectionValue() {
+            const select = document.getElementById('signupSectionSelect');
+            const text = document.getElementById('signupSectionText');
+            return select?.value || text?.value || '';
+        }
+
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.className = `alert alert-${type} show`;
+            alertDiv.innerHTML = `<i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : 'info'}" width="16" height="16"></i> ${message}`;
+            lucide.createIcons();
+            setTimeout(() => alertDiv.classList.remove('show'), 3000);
+        }
+
+        // HANDLE LOGIN: validate credentials against the demo user list before allowing access
+        function handleLogin(event) {
+            event.preventDefault();
+            const password = document.getElementById('loginPassword').value.trim();
+            const email = getLoginEmail();
+            const emailLower = (email || '').trim().toLowerCase();
+
+            if (!email) {
+                showAlert('Please enter your email address', 'error');
+                return;
+            }
+            if (!password) {
+                showAlert('Please enter your password', 'error');
+                return;
+            }
+
+            if (!email.includes('@') || !email.includes('.')) {
+                showAlert('Please enter a valid email address', 'error');
+                return;
+            }
+
+            const isVerifierEmail = /@.*\.cc$/i.test(emailLower) || emailLower.includes('.cc');
+            const targetPage = isVerifierEmail ? 'ver.html' : 'student.html';
+            const userRole = isVerifierEmail ? 'verifier' : 'student';
+            const userData = { email: emailLower, role: userRole, loginTime: new Date().toISOString() };
+
+            localStorage.setItem('userData', JSON.stringify(userData));
+            localStorage.setItem('userRole', userRole);
+            showAlert(isVerifierEmail ? 'Verifier login successful! Redirecting to verification dashboard...' : 'Student login successful! Redirecting to student dashboard...', 'success');
+            setTimeout(() => {
+                window.location.href = targetPage;
+            }, 1000);
+        }
+
+        // HANDLE SIGNUP: UPDATED - Removed validation for Admin ID and Faculty ID
+        function handleSignup(event) {
+    event.preventDefault();
+
+    const role = document.getElementById('signupRole').value;
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('signupConfirmPassword').value;
+
+    if (!role || !name || !email || !password) {
+        showAlert('Please fill all fields', 'error');
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        showAlert('Passwords do not match', 'error');
+        return;
+    }
+
+    if (role === 'faculty') {
+        const dept = document.getElementById('signupDepartment')?.value;
+        if (!dept) {
+            showAlert('Enter department', 'error');
+            return;
+        }
+    }
+
+    if (role === 'student') {
+        const roll = document.getElementById('signupRollNumber')?.value;
+        const sem = document.getElementById('signupSemester')?.value;
+        const sec = document.getElementById('signupSection')?.value;
+
+        if (!roll || !sem || !sec) {
+            showAlert('Fill all student details', 'error');
+            return;
+        }
+    }
+
+    showAlert(`${role.toUpperCase()} account created successfully!`, 'success');
+    setTimeout(() => showLogin(), 1500);
+}
+
+        function handleForgotPassword(event) {
+            event.preventDefault();
+            const email = document.getElementById('forgotEmail').value;
+            if (!email) { showAlert('Please enter your email address', 'error'); return; }
+            showAlert(`Password reset link sent to ${email}. Please check your inbox.`, 'success');
+            setTimeout(() => showLogin(), 2000);
+        }
+
+        function showSignup(event) { 
+            if (event) event.preventDefault(); 
+            currentMode = 'signup'; 
+            document.getElementById('loginForm').classList.add('hidden'); 
+            document.getElementById('signupForm').classList.remove('hidden'); 
+            document.getElementById('forgotForm').classList.add('hidden'); 
+            updateSignupFields(); 
+            lucide.createIcons(); 
+        }
+        
+        function showLogin(event) { 
+            if (event) event.preventDefault(); 
+            currentMode = 'login'; 
+            document.getElementById('loginForm').classList.remove('hidden'); 
+            document.getElementById('signupForm').classList.add('hidden'); 
+            document.getElementById('forgotForm').classList.add('hidden'); 
+            updateLoginFields(); 
+            lucide.createIcons(); 
+        }
+
+        function getLoginEmail() {
+    return document.getElementById('loginEmail')?.value || '';
+}
+        
+        function showForgotPassword(event) { 
+            if (event) event.preventDefault(); 
+            currentMode = 'forgot'; 
+            document.getElementById('loginForm').classList.add('hidden'); 
+            document.getElementById('signupForm').classList.add('hidden'); 
+            document.getElementById('forgotForm').classList.remove('hidden'); 
+            lucide.createIcons(); 
+        }
+        
+        function showGoogleLogin() { 
+            showAlert('Google Workspace integration coming soon!', 'info'); 
+        }
+
+        // Initialize login fields on page load (admin email by default)
+        updateLoginFields();
+    </script>
+</body>
+</html>

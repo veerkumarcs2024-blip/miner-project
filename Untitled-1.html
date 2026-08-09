@@ -1,0 +1,29 @@
+<!-- Student section -->
+<section id="studentSection" class="card hidden" aria-hidden="true">
+  <h2>Student Page</h2>
+  <p>Welcome, <span id="studentEmail"></span>! This is the student page.</p>
+  <!-- Example student content -->
+  <ul>
+    <li>View assignments</li>
+    <li>View grades</li>
+    <li>Contact instructor</li>
+  </ul>
+  <button id="studentBack" class="btn btn-secondary">Log out</button>
+</section>
+
+<!-- Verification section -->
+<section id="verSection" class="card hidden" aria-hidden="true">
+  <h2>Verification Required</h2>
+  <p>A special verification is required for emails ending with <code>.cc</code>.</p>
+  <p>Entered email: <strong id="verEmail"></strong></p>
+
+  <label for="code">Enter verification code</label>
+  <input id="code" type="text" placeholder="123456" />
+
+  <div class="actions">
+    <button id="verifyBtn" class="btn btn-primary">Verify</button>
+    <button id="verBack" class="btn btn-secondary">Cancel</button>
+  </div>
+
+  <p id="verResult" class="small" style="color:green"></p>
+</section>
