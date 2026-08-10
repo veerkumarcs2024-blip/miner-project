@@ -577,6 +577,60 @@
               .replace(/'/g, '&#039;');
         };
 
+        function getStudentRecordFromLocalUser() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const email = String(userData.email || '').trim().toLowerCase();
+            const name = String(userData.name || '').trim();
+
+            if (!email && !name) return null;
+
+            const student = Array.from(studentsStore.values()).find(s => {
+                const matchesEmail = s.email && s.email.toLowerCase() === email;
+                const matchesName = s.name && name && s.name.toLowerCase() === name.toLowerCase();
+                return matchesEmail || matchesName;
+            });
+
+            return student || null;
+        }
+
+        function populateStudentDashboard() {
+            const profile = getStudentRecordFromLocalUser();
+            const fallbackName = profile?.name || JSON.parse(localStorage.getItem('userData') || '{}').name || 'Student';
+            const firstName = fallbackName.split(' ')[0] || 'Student';
+            const initials = fallbackName.split(' ').filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase() || 'S';
+
+            const nameEls = [
+                document.getElementById('dashName'),
+                document.getElementById('dashDropdownName'),
+                document.getElementById('welcomeMsg')
+            ];
+            nameEls.forEach(el => { if (el) el.textContent = fallbackName; });
+
+            const avatarEls = [
+                document.getElementById('dashAvatar'),
+                document.getElementById('dashDropdownAvatar')
+            ];
+            avatarEls.forEach(el => { if (el) el.textContent = initials; });
+
+            const rollEl = document.getElementById('dashRoll');
+            if (rollEl) rollEl.textContent = profile?.rollNo || 'N/A';
+
+            const emailEl = document.getElementById('emailValue');
+            if (emailEl) emailEl.textContent = profile?.email || JSON.parse(localStorage.getItem('userData') || '{}').email || 'N/A';
+
+            const semesterEl = document.getElementById('semesterValue');
+            if (semesterEl) semesterEl.textContent = profile?.semester || 'N/A';
+
+            const sectionEl = document.getElementById('sectionValue');
+            if (sectionEl) sectionEl.textContent = profile?.section || 'N/A';
+
+            const batchEl = document.getElementById('batchValue');
+            if (batchEl) batchEl.textContent = profile?.batch || 'N/A';
+
+            const welcomeMsg = document.getElementById('welcomeMsg');
+            if (welcomeMsg) welcomeMsg.textContent = `Hi, ${firstName}!`;
+        }
+
         function showView(viewName) {
             const loginView = document.getElementById('loginView');
             const studentDashboard = document.getElementById('studentDashboard');
@@ -585,7 +639,10 @@
             studentDashboard.classList.add('hidden');
             verifierDashboard.classList.add('hidden');
             if (viewName === 'login') loginView.classList.remove('hidden');
-            if (viewName === 'student') studentDashboard.classList.remove('hidden');
+            if (viewName === 'student') {
+                studentDashboard.classList.remove('hidden');
+                populateStudentDashboard();
+            }
             if (viewName === 'verifier') verifierDashboard.classList.remove('hidden');
         }
 
@@ -609,7 +666,12 @@
             // Specific mapping: class coordinator / verifier
             if (emailLower === 'amol1234@gmail.com') {
                 localStorage.setItem('userRole', 'verifier');
-                localStorage.setItem('userData', JSON.stringify({ email, role: 'verifier', loginTime: new Date().toISOString() }));
+                localStorage.setItem('userData', JSON.stringify({
+                    email,
+                    name: 'Amol Sharma',
+                    role: 'verifier',
+                    loginTime: new Date().toISOString()
+                }));
                 // verifier data is already initialized during app startup
                 showView('verifier');
                 showAlert('success', 'Class coordinator login successful.');
@@ -619,7 +681,12 @@
             // Explicit student test account
             if (emailLower === 'veer1122@gmail.com') {
                 localStorage.setItem('userRole', 'student');
-                localStorage.setItem('userData', JSON.stringify({ email, role: 'student', loginTime: new Date().toISOString() }));
+                localStorage.setItem('userData', JSON.stringify({
+                    email,
+                    name: 'Veer Kumar',
+                    role: 'student',
+                    loginTime: new Date().toISOString()
+                }));
                 showView('student');
                 showAlert('success', 'Student login successful.');
                 return;
@@ -629,7 +696,12 @@
             const studentFound = Array.from(studentsStore.values()).find(s => s.email && s.email.toLowerCase() === emailLower);
             if (studentFound) {
                 localStorage.setItem('userRole', 'student');
-                localStorage.setItem('userData', JSON.stringify({ email, role: 'student', loginTime: new Date().toISOString() }));
+                localStorage.setItem('userData', JSON.stringify({
+                    email,
+                    name: studentFound.name,
+                    role: 'student',
+                    loginTime: new Date().toISOString()
+                }));
                 showView('student');
                 showAlert('success', 'Student login successful.');
                 return;
