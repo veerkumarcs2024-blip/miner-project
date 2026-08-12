@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE Department - Complete Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-radius: 24px;
+            padding: 20px 30px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .header h1 span {
+            background: linear-gradient(135deg, #facc15, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            background: rgba(255,255,255,0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .notification-bell:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .notification-bell i {
+            color: white;
+            font-size: 20px;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .profile-section {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 16px 8px 12px;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+        
+        .profile-trigger:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .profile-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #facc15, #f59e0b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        .profile-name {
+            color: white;
+            font-weight: 500;
+        }
+        
+        .profile-name small {
+            font-size: 11px;
+            color: #94a3b8;
+            display: block;
+        }
+        
+        .profile-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 320px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: none;
+            z-index: 1000;
+        }
+        
+        .profile-dropdown.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .dropdown-header {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .dropdown-avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #facc15, #f59e0b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 auto 12px;
+        }
+        
+        .dropdown-name {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .dropdown-email {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+        
+        .dropdown-role {
+            background: rgba(255,255,255,0.2);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            margin-top: 10px;
+        }
+        
+        .dropdown-menu {
+            padding: 10px 0;
+        }
+        
+        .dropdown-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            color: #1e293b;
+            text-decoration: none;
+        }
+        
+        .dropdown-item:hover {
+            background: #f1f5f9;
+        }
+        
+        .dropdown-item i {
+            width: 24px;
+            color: #f59e0b;
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 8px 0;
+        }
+        
+        .logout-item {
+            color: #ef4444;
+        }
+        
+        .logout-item i {
+            color: #ef4444;
+        }
+        
+        .notification-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 380px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: none;
+            z-index: 1000;
+        }
+        
+        .notification-dropdown.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        
+        .notification-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .notification-header h4 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .notification-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .mark-read-btn, .delete-all-btn {
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .mark-read-btn { color: #f59e0b; }
+        .delete-all-btn { color: #ef4444; }
+        
+        .notification-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .notification-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: background 0.2s;
+            position: relative;
+        }
+        
+        .notification-item.unread {
+            background: #fef3c7;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+            padding-right: 40px;
+        }
+        
+        .notification-message {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 6px;
+            padding-right: 40px;
+        }
+        
+        .notification-time {
+            font-size: 10px;
+            color: #94a3b8;
+        }
+        
+        .delete-notif-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 5px;
+            border-radius: 50%;
+        }
+        
+        .delete-notif-btn:hover {
+            background: #fee2e2;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            width: 90%;
+            max-width: 450px;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h3 {
+            font-size: 20px;
+        }
+        
+        .close-modal {
+            font-size: 24px;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #334155;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #facc15;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #facc15, #f59e0b);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            background: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .tab-btn.active {
+            background: #facc15;
+            color: #0f172a;
+        }
+        
+        /* Timetable Styles */
+        .filter-section {
+            background: white;
+            border-radius: 20px;
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: flex-end;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 160px;
+        }
+        
+        .filter-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .filter-group select {
+            width: 100%;
+            padding: 12px 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+            cursor: pointer;
+        }
+        
+        .view-btn {
+            background: linear-gradient(135deg, #facc15, #f59e0b);
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .timetable-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        
+        .card-header {
+            padding: 18px 24px;
+            background: linear-gradient(135deg, #f8fafc, #ffffff);
+            border-bottom: 2px solid #eef2f6;
+        }
+        
+        .timetable-wrapper {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+        
+        .timetable {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            min-width: 1000px;
+        }
+        
+        .timetable th, .timetable td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .timetable th {
+            background: #f8fafc;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        .day-col {
+            background: #f1f5f9;
+            font-weight: 700;
+            width: 70px;
+        }
+        
+        .bg-oopj { background: #FFF2CC; }
+        .bg-tafl { background: #FCE4D6; }
+        .bg-os { background: #CCEEFF; }
+        .bg-say { background: #B6D7A8; }
+        .bg-uhvp { background: #F4CCCC; }
+        .bg-cys { background: #D9EAD3; }
+        .bg-dsj { background: #FFFFFF; }
+        .bg-maths { background: #E2E3E5; }
+        .bg-lunch { background: #FFEBCC; }
+        .bg-apt { background: #C9E4DE; }
+        
+        /* Faculty Styles */
+        .faculty-wrapper {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            overflow-x: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        
+        .faculty-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .faculty-table th, .faculty-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .faculty-table th {
+            background: #f8fafc;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        .faculty-table tr:hover {
+            background: #fef3c7;
+        }
+        
+        .delete-faculty-btn {
+            background: #ef4444;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .add-faculty-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .refresh-faculty-btn {
+            background: #3b82f6;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 10px;
+        }
+        
+        .faculty-header {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: #94a3b8;
+        }
+        
+        .timetable-info {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 5px;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e293b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            opacity: 0;
+            transition: .3s;
+            font-size: 13px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Leave Portal Styles */
+        .teacher-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        
+        .teacher-list {
+            padding: 20px;
+        }
+        
+        .teacher-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+        
+        .teacher-item {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .teacher-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: #facc15;
+        }
+        
+        .teacher-name {
+            font-weight: 700;
+            font-size: 16px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .teacher-subject {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        
+        .replacement-box {
+            background: #e0f2fe;
+            padding: 12px 16px;
+            border-radius: 16px;
+            margin-top: 15px;
+        }
+        
+        .detail-row {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px solid #eef2f6;
+        }
+        
+        .detail-label {
+            width: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+        }
+        
+        .detail-value {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+        
+        .leave-modal-content {
+            background: white;
+            border-radius: 28px;
+            width: 90%;
+            max-width: 480px;
+            overflow: hidden;
+            animation: modalPop 0.3s ease;
+        }
+        
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .leave-modal-header {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: white;
+            padding: 20px 24px;
+        }
+        
+        .leave-modal-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .leave-modal-body {
+            padding: 24px;
+        }
+        
+        .close-modal-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 CSE Department <span>Complete Management System</span></h1>
+            <div class="header-actions">
+                <div class="notification-bell" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationCount">0</span>
+                </div>
+                <div class="profile-section" id="profileSection">
+                    <div class="profile-trigger">
+                        <div class="profile-avatar" id="profileAvatar">A</div>
+                        <div class="profile-name">
+                            <span id="profileNameText">Admin</span>
+                            <small>Super Admin</small>
+                        </div>
+                        <i class="fas fa-chevron-down" style="color: white; font-size: 12px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab-btn active" id="tabAnalytics"><i class="fas fa-chart-line"></i> Analytics Dashboard</button>
+            <button class="tab-btn" id="tabTimetable"><i class="fas fa-calendar"></i> Timetable</button>
+            <button class="tab-btn" id="tabFaculty"><i class="fas fa-users"></i> Faculty Management</button>
+            <button class="tab-btn" id="tabLeave"><i class="fas fa-file-alt"></i> Leave Portal</button>
+        </div>
+        
+        <!-- ========== ANALYTICS DASHBOARD SECTION - PUT YOUR CODE HERE ========== -->
+        <div id="analyticsSection">
+            <div class="empty-state" style="padding: 80px; background: white; border-radius: 28px;">
+                <i class="fas fa-chart-line fa-4x" style="color: #cbd5e1; margin-bottom: 20px;"></i>
+                <h3 style="color: #64748b;">Analytics Dashboard</h3>
+                <p style="color: #94a3b8;">Your analytics code goes here</p>
+            </div>
+        </div>
+        <!-- ========== END ANALYTICS DASHBOARD SECTION ========== -->
+        
+        <!-- Timetable Section -->
+        <div id="timetableSection" style="display: none;">
+            <div class="filter-section">
+                <div class="filter-group"><label><i class="fas fa-building"></i> Department</label><select id="deptSelect"><option value="">-- Select Department --</option><option value="CSE" selected>CSE</option><option value="DS">DS</option><option value="AIML">AI&ML</option><option value="ECE">ECE</option><option value="ME">ME</option><option value="CE">CE</option></select></div>
+                <div class="filter-group"><label><i class="fas fa-calendar"></i> Year</label><select id="yearSelectTT"><option value="">-- Select Year --</option></select></div>
+                <div class="filter-group"><label><i class="fas fa-layer-group"></i> Semester</label><select id="semesterSelectTT"><option value="">-- Select Semester --</option></select></div>
+                <div class="filter-group"><label><i class="fas fa-users"></i> Section</label><select id="sectionSelectTT"><option value="">-- Select Section --</option></select></div>
+                <button class="view-btn" onclick="loadTimetable()"><i class="fas fa-eye"></i> Show Timetable</button>
+            </div>
+            <div class="timetable-card"><div class="card-header"><h3 style="font-size: 18px;"><i class="fas fa-calendar-week"></i> Weekly Timetable</h3><p class="timetable-info" id="timetableInfo">Select Department, Year, Semester and Section to view timetable</p></div><div class="timetable-wrapper" id="timetableWrapper"><div class="empty-state"><i class="fas fa-calendar-alt fa-3x" style="margin-bottom: 15px; color: #cbd5e1;"></i><p>No timetable selected yet</p></div></div></div>
+        </div>
+        
+        <!-- Faculty Section -->
+        <div id="facultySection" style="display: none;">
+            <div class="faculty-wrapper"><div class="faculty-header"><button class="add-faculty-btn" onclick="addNewFaculty()"><i class="fas fa-plus"></i> Add New Faculty</button><button class="refresh-faculty-btn" onclick="refreshFacultyTable()"><i class="fas fa-sync-alt"></i> Refresh</button></div>
+            <table class="faculty-table" id="facultyTable"><thead><tr><th>S.No.</th><th>Teacher Code</th><th>Teacher Name</th><th>Subject</th><th>Contact</th><th>Actions</th></tr></thead><tbody id="facultyBody"></tbody></table>
+            <div style="margin-top: 15px; font-size: 12px; color: #64748b; text-align: center;"><i class="fas fa-mouse-pointer"></i> Double-click any cell to edit</div></div>
+        </div>
+        
+        <!-- Leave Portal Section - YOUR LEAVE MANAGEMENT CODE -->
+        <div id="leaveSection" style="display: none;">
+            <div class="filter-section">
+                <div class="filter-group">
+                    <label><i class="fas fa-building"></i> Department</label>
+                    <select id="departmentSelect">
+                        <option value="">-- Select Department --</option>
+                        <option value="CSE" selected>Computer Science & Engineering (CSE)</option>
+                        <option value="DS">Data Science (DS)</option>
+                        <option value="AIML">Artificial Intelligence & Machine Learning (AI&ML)</option>
+                        <option value="ECE">Electronics & Communication (ECE)</option>
+                        <option value="ME">Mechanical Engineering (ME)</option>
+                        <option value="CE">Civil Engineering (CE)</option>
+                    </select>
+                </div>
+                <button class="view-btn" onclick="loadTeachers()">
+                    <i class="fas fa-users"></i> Show Teachers on Leave
+                </button>
+            </div>
+
+            <div class="teacher-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-calendar-week"></i> Teachers Currently on Leave</h3>
+                    <span id="teacherCount" style="font-size: 13px; color: #64748b;">0 teachers on leave</span>
+                </div>
+                <div class="teacher-list" id="teacherList">
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-check fa-3x" style="margin-bottom: 15px; color: #cbd5e1;"></i>
+                        <p>Select a department to view teachers on leave</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profile Dropdown -->
+    <div class="profile-dropdown" id="profileDropdown"><div class="dropdown-header"><div class="dropdown-avatar" id="dropdownAvatar">A</div><div class="dropdown-name" id="dropdownName">Admin</div><div class="dropdown-email" id="dropdownEmail">admin@cse.edu</div><div class="dropdown-role">Super Administrator</div></div><div class="dropdown-menu"><div class="dropdown-item" onclick="openEditProfileModal()"><i class="fas fa-user-edit"></i> Edit Profile</div><div class="dropdown-item" onclick="openChangePasswordModal()"><i class="fas fa-key"></i> Change Password</div><div class="dropdown-divider"></div><div class="dropdown-item logout-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</div></div></div>
+    
+    <!-- Notification Dropdown -->
+    <div class="notification-dropdown" id="notificationDropdown"><div class="notification-header"><h4><i class="fas fa-bell"></i> Notifications</h4><div class="notification-actions"><span class="mark-read-btn" onclick="markAllRead()">Mark all read</span><span class="delete-all-btn" onclick="deleteAllNotifications()">Delete all</span></div></div><div class="notification-list" id="notificationList"></div></div>
+    
+    <!-- Modals -->
+    <div id="editProfileModal" class="modal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-edit"></i> Edit Profile</h3><span class="close-modal" onclick="closeEditProfileModal()">&times;</span></div><div class="form-group"><label>Full Name</label><input type="text" id="editName"></div><div class="form-group"><label>Email Address</label><input type="email" id="editEmail"></div><div class="form-group"><label>Department</label><input type="text" value="Computer Science & Engineering" readonly style="background:#f1f5f9;"></div><div class="form-group"><label>Role</label><input type="text" value="Super Admin" readonly style="background:#f1f5f9;"></div><button class="btn-primary" onclick="saveProfile()">Save Changes</button></div></div>
+    
+    <div id="changePasswordModal" class="modal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-key"></i> Change Password</h3><span class="close-modal" onclick="closeChangePasswordModal()">&times;</span></div><div class="form-group"><label>Current Password</label><input type="password" id="currentPassword"></div><div class="form-group"><label>New Password</label><input type="password" id="newPassword"></div><div class="form-group"><label>Confirm New Password</label><input type="password" id="confirmPassword"></div><button class="btn-primary" onclick="changePassword()">Update Password</button></div></div>
+    
+    <!-- Leave Modal -->
+    <div id="leaveModal" class="modal">
+        <div class="leave-modal-content">
+            <div class="leave-modal-header">
+                <h2><i class="fas fa-calendar-alt"></i> Leave Details</h2>
+            </div>
+            <div class="leave-modal-body" id="modalBody"></div>
+            <div class="modal-footer" style="padding: 16px 24px 24px; display: flex; justify-content: flex-end;">
+                <button class="close-modal-btn" onclick="closeLeaveModal()">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // ========== PROFILE DATA ==========
+        let adminProfile = JSON.parse(localStorage.getItem('adminProfile')) || { name: 'Admin', email: 'admin@cse.edu', avatar: 'A', password: 'admin123' };
+        let notifications = JSON.parse(localStorage.getItem('timetable_notifications')) || [{ id: 1, title: 'Welcome', message: 'Welcome to Management System', time: new Date().toISOString(), read: false }];
+        
+        // ========== FACULTY DATA ==========
+        let facultyList = [
+            { sno: 1, code: "AMS", name: "Mr. Amol Sharma", subject: "OOPJ, DSJ", contact: "9876543219" },
+            { sno: 2, code: "PRG", name: "Mr. Prem Kishor Gautam", subject: "TAFL", contact: "9876543211" },
+            { sno: 3, code: "SUS", name: "Dr. Suneet Shukla", subject: "OS, OSL", contact: "9876543212" },
+            { sno: 4, code: "RIJ", name: "Ms. Rishu Jain", subject: "CYS, OOPJL", contact: "9876543213" },
+            { sno: 5, code: "SAT", name: "Mr. Sandeep Tyagi", subject: "ESE", contact: "9876543214" },
+            { sno: 6, code: "DES", name: "Mr. Deepak Sharma", subject: "APT", contact: "9876543215" },
+            { sno: 7, code: "PRC", name: "Ms. Priya Chaudhary", subject: "SOS", contact: "9876543216" },
+            { sno: 8, code: "MAP", name: "Mr. Mayank Parashar", subject: "CSW", contact: "9876543217" },
+            { sno: 9, code: "RIG", name: "Ms. Ritika Garg", subject: "WDJ", contact: "9876543218" },
+            { sno: 10, code: "LEP", name: "Ms. Lekhika Prakash", subject: "UHVPE", contact: "9876543219" }
+        ];
+        let nextSno = 11;
+        
+        // ========== TIMETABLE DATA ==========
+        const daysList = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
+        const cseTimetable = {
+            "MON": [{ s: "OOPJ", t: "Mr. Amol Sharma", e: "F-210" },{ s: "CYS / PYP", t: "Ms. Rishu Jain", e: "F-210" },{ s: "TAFL", t: "Mr. Prem Kishor Gautam", e: "F-210" },{ s: "ESE / MATHS", t: "Mr. Sandeep Tyagi", e: "F-210" },{ s: "LUNCH", t: "", e: "" },{ s: "APT", t: "Mr. Deepak Sharma", e: "F-210" },{ s: "SAY", t: "", e: "Ground" },{ s: "PROJECT", t: "", e: "" },{ s: "", t: "", e: "" }],
+            "TUE": [{ s: "ESE / MATHS", t: "Mr. Sandeep Tyagi", e: "F-210" },{ s: "TAFL", t: "Mr. Prem Kishor Gautam", e: "F-210" },{ s: "CSW-G1", t: "Mr. Mayank Parashar", e: "F-406A" },{ s: "WDJ-G2", t: "Ms. Ritika Garg", e: "F-406B" },{ s: "LUNCH", t: "", e: "" },{ s: "SOS", t: "Ms. Priya Chaudhary", e: "F-210" },{ s: "OS", t: "Dr. Suneet Shukla", e: "F-210" },{ s: "CYS / PYP", t: "Ms. Rishu Jain", e: "F-210" },{ s: "UHVPE", t: "Ms. Lekhika Prakash", e: "F-210" }],
+            "WED": [{ s: "OS", t: "Dr. Suneet Shukla", e: "F-210" },{ s: "OOPJ", t: "Mr. Amol Sharma", e: "F-210" },{ s: "OSL", t: "Dr. Suneet Shukla", e: "F-404A" },{ s: "OOPJL", t: "Ms. Rishu Jain", e: "F-404B" },{ s: "LUNCH", t: "", e: "" },{ s: "DSJ", t: "Mr. Amol Sharma", e: "F-204" },{ s: "DSJ", t: "Mr. Amol Sharma", e: "F-204" },{ s: "TAFL", t: "Mr. Prem Kishor Gautam", e: "F-210" },{ s: "ESE / MATHS", t: "Mr. Sandeep Tyagi", e: "F-210" }],
+            "THU": [{ s: "OOPJ", t: "Mr. Amol Sharma", e: "F-210" },{ s: "TAFL", t: "Mr. Prem Kishor Gautam", e: "F-210" },{ s: "OSL", t: "Dr. Suneet Shukla", e: "F-404A" },{ s: "OOPJL", t: "Ms. Rishu Jain", e: "F-404B" },{ s: "LUNCH", t: "", e: "" },{ s: "CYS / PYP", t: "Ms. Rishu Jain", e: "F-210" },{ s: "OS", t: "Dr. Suneet Shukla", e: "F-210" },{ s: "OOPJ", t: "Mr. Amol Sharma", e: "F-210" },{ s: "ESE / MATHS", t: "Mr. Sandeep Tyagi", e: "F-210" }],
+            "FRI": [{ s: "CYS / PYP", t: "Ms. Rishu Jain", e: "F-210" },{ s: "UHVPE", t: "Ms. Lekhika Prakash", e: "F-210" },{ s: "DSJ", t: "Mr. Amol Sharma", e: "F-204" },{ s: "DSJ", t: "Mr. Amol Sharma", e: "F-204" },{ s: "LUNCH", t: "", e: "" },{ s: "OS", t: "Dr. Suneet Shukla", e: "F-210" },{ s: "ESE / MATHS", t: "Ms. Rishu Jain", e: "F-210" },{ s: "CSW-G2", t: "Mr. Mayank Parashar", e: "F-406A" },{ s: "", t: "", e: "" }]
+        };
+        const departmentTimetables = { CSE: cseTimetable, DS: cseTimetable, AIML: cseTimetable, ECE: cseTimetable, ME: cseTimetable, CE: cseTimetable };
+        const departments = { CSE: { years: ["1st","2nd","3rd","4th"], semesters: { "1st":["1st","2nd"],"2nd":["3rd","4th"],"3rd":["5th","6th"],"4th":["7th","8th"] }, sections: ["A","B","C","D"] }, DS: { years: ["1st","2nd","3rd","4th"], semesters: { "1st":["1st","2nd"],"2nd":["3rd","4th"],"3rd":["5th","6th"],"4th":["7th","8th"] }, sections: ["A","B"] }, AIML: { years: ["1st","2nd","3rd","4th"], semesters: { "1st":["1st","2nd"],"2nd":["3rd","4th"],"3rd":["5th","6th"],"4th":["7th","8th"] }, sections: ["A","B"] }, ECE: { years: ["1st","2nd","3rd","4th"], semesters: { "1st":["1st","2nd"],"2nd":["3rd","4th"],"3rd":["5th","6th"],"4th":["7th","8th"] }, sections: ["A","B","C"] }, ME: { years: ["1st","2nd","3rd","4th"], semesters: { "1st":["1st","2nd"],"2nd":["3rd","4th"],"3rd":["5th","6th"],"4th":["7th","8th"] }, sections: ["A","B"] }, CE: { years: ["1st","2nd","3rd","4th"], semesters: { "1st":["1st","2nd"],"2nd":["3rd","4th"],"3rd":["5th","6th"],"4th":["7th","8th"] }, sections: ["A","B"] } };
+        
+        // ========== LEAVE PORTAL DATA (YOUR COMPLETE DATA) ==========
+        const teachersData = {
+            CSE: [
+                { id: 1, name: "Prof. Amol Sharma", subject: "Object Oriented Programming (OOPJ)", leaveDetails: { fromDate: "2026-04-22", toDate: "2026-04-25", days: 4, reason: "Medical Emergency - Family surgery", replacement: "Prof. Mayank Parashar" } },
+                { id: 2, name: "Dr. Suneet Shukla", subject: "Operating Systems (OS)", leaveDetails: { fromDate: "2026-04-28", toDate: "2026-04-30", days: 3, reason: "Conference at IIT Delhi", replacement: "Dr. Rajesh Kumar & Prof. Ankit Verma" } },
+                { id: 3, name: "Ms. Rishu Jain", subject: "Cyber Security (CYS)", leaveDetails: { fromDate: "2026-05-02", toDate: "2026-05-05", days: 4, reason: "Training Program", replacement: "Mr. Mayank Parashar" } },
+                { id: 4, name: "Mr. Prem Kishor Gautam", subject: "Theory of Automata (TAFL)", leaveDetails: { fromDate: "2026-04-23", toDate: "2026-04-24", days: 2, reason: "Training Program at NIT", replacement: "Dr. Vikram Singh" } },
+                { id: 5, name: "Mr. Deepak Sharma", subject: "Aptitude (APT)", leaveDetails: { fromDate: "2026-04-26", toDate: "2026-04-26", days: 1, reason: "Family Function", replacement: "Ms. Priya Chaudhary" } },
+                { id: 6, name: "Dr. Lekhika Prakash", subject: "Universal Human Values (UHVPE)", leaveDetails: { fromDate: "2026-05-01", toDate: "2026-05-03", days: 3, reason: "Personal Work", replacement: "Dr. Suneet Shukla" } }
+            ],
+            DS: [
+                { id: 16, name: "Dr. Rajesh Kumar", subject: "Python Programming", leaveDetails: { fromDate: "2026-05-01", toDate: "2026-05-05", days: 5, reason: "International Conference", replacement: "Dr. Anjali Sharma" } },
+                { id: 17, name: "Ms. Swati Gupta", subject: "Data Visualization", leaveDetails: { fromDate: "2026-05-10", toDate: "2026-05-12", days: 3, reason: "Research Work", replacement: "Dr. Vikram Singh" } },
+                { id: 18, name: "Mr. Ankit Verma", subject: "Big Data Analytics", leaveDetails: { fromDate: "2026-04-29", toDate: "2026-04-30", days: 2, reason: "Medical Emergency", replacement: "Ms. Priya Singh" } },
+                { id: 19, name: "Dr. Vikram Singh", subject: "Deep Learning", leaveDetails: { fromDate: "2026-04-27", toDate: "2026-04-29", days: 3, reason: "Workshop at IIT", replacement: "Ms. Anjali Mehta" } },
+                { id: 20, name: "Mr. Rahul Sharma", subject: "Business Intelligence", leaveDetails: { fromDate: "2026-05-10", toDate: "2026-05-12", days: 3, reason: "Family Function", replacement: "Dr. Rajesh Kumar" } },
+                { id: 21, name: "Dr. Anjali Mehta", subject: "Data Mining", leaveDetails: { fromDate: "2026-05-15", toDate: "2026-05-18", days: 4, reason: "Conference", replacement: "Prof. S.K. Mehta" } }
+            ],
+            AIML: [
+                { id: 28, name: "Dr. Pradeep Kumar", subject: "Neural Networks", leaveDetails: { fromDate: "2026-05-20", toDate: "2026-05-22", days: 3, reason: "Research", replacement: "Dr. Swati Gupta" } },
+                { id: 29, name: "Ms. Anjali Mehta", subject: "Python for AI", leaveDetails: { fromDate: "2026-05-05", toDate: "2026-05-07", days: 3, reason: "Family Function", replacement: "Dr. Pradeep Kumar" } },
+                { id: 30, name: "Dr. Swati Gupta", subject: "Computer Vision", leaveDetails: { fromDate: "2026-05-10", toDate: "2026-05-12", days: 3, reason: "Research Work", replacement: "Dr. Vikram Singh" } },
+                { id: 31, name: "Prof. Rajesh Khanna", subject: "Natural Language Processing", leaveDetails: { fromDate: "2026-04-25", toDate: "2026-04-28", days: 4, reason: "Conference", replacement: "Dr. Swati Gupta" } },
+                { id: 32, name: "Prof. Neha Singh", subject: "Expert Systems", leaveDetails: { fromDate: "2026-05-15", toDate: "2026-05-16", days: 2, reason: "Personal Work", replacement: "Dr. Manish Gupta" } },
+                { id: 33, name: "Dr. Manish Gupta", subject: "AI Ethics", leaveDetails: { fromDate: "2026-05-25", toDate: "2026-05-28", days: 4, reason: "Seminar", replacement: "Prof. Rajesh Khanna" } }
+            ],
+            ECE: [
+                { id: 38, name: "Prof. R.K. Singh", subject: "Digital Electronics", leaveDetails: { fromDate: "2026-06-01", toDate: "2026-06-03", days: 3, reason: "Conference", replacement: "Dr. S.K. Verma" } },
+                { id: 39, name: "Dr. S.K. Verma", subject: "Signals & Systems", leaveDetails: { fromDate: "2026-05-10", toDate: "2026-05-12", days: 3, reason: "Research Work", replacement: "Dr. Anjali Sharma" } },
+                { id: 40, name: "Ms. Neha Gupta", subject: "Communication Systems", leaveDetails: { fromDate: "2026-05-20", toDate: "2026-05-22", days: 3, reason: "Training", replacement: "Prof. R.K. Singh" } },
+                { id: 41, name: "Dr. A.K. Singh", subject: "Microprocessors", leaveDetails: { fromDate: "2026-04-28", toDate: "2026-04-30", days: 3, reason: "Conference", replacement: "Prof. R.K. Singh" } },
+                { id: 42, name: "Dr. Rajat Gupta", subject: "Antenna Engineering", leaveDetails: { fromDate: "2026-05-20", toDate: "2026-05-22", days: 3, reason: "Seminar", replacement: "Dr. S.K. Verma" } },
+                { id: 43, name: "Prof. Sunil Kumar", subject: "VLSI Design", leaveDetails: { fromDate: "2026-06-05", toDate: "2026-06-07", days: 3, reason: "Workshop", replacement: "Ms. Pooja Verma" } }
+            ],
+            ME: [
+                { id: 52, name: "Prof. A.K. Sharma", subject: "Thermodynamics", leaveDetails: { fromDate: "2026-05-25", toDate: "2026-05-28", days: 4, reason: "Conference", replacement: "Dr. R.K. Verma" } },
+                { id: 53, name: "Dr. R.K. Verma", subject: "Fluid Mechanics", leaveDetails: { fromDate: "2026-04-25", toDate: "2026-04-28", days: 4, reason: "Personal Work", replacement: "Prof. A.K. Sharma" } },
+                { id: 54, name: "Dr. P.K. Singh", subject: "Machine Design", leaveDetails: { fromDate: "2026-05-05", toDate: "2026-05-07", days: 3, reason: "Conference", replacement: "Mr. S.K. Yadav" } },
+                { id: 55, name: "Dr. Vikas Yadav", subject: "Mechanics of Materials", leaveDetails: { fromDate: "2026-05-12", toDate: "2026-05-14", days: 3, reason: "Workshop", replacement: "Dr. R.K. Verma" } },
+                { id: 56, name: "Mr. S.K. Yadav", subject: "Manufacturing Processes", leaveDetails: { fromDate: "2026-06-10", toDate: "2026-06-12", days: 3, reason: "Training", replacement: "Dr. P.K. Singh" } }
+            ],
+            CE: [
+                { id: 63, name: "Dr. S.K. Gupta", subject: "Structural Analysis", leaveDetails: { fromDate: "2026-05-20", toDate: "2026-05-22", days: 3, reason: "Conference", replacement: "Prof. R.K. Sharma" } },
+                { id: 64, name: "Prof. R.K. Sharma", subject: "Geotechnical Engineering", leaveDetails: { fromDate: "2026-05-15", toDate: "2026-05-18", days: 4, reason: "Seminar Attendance", replacement: "Dr. S.K. Gupta" } },
+                { id: 65, name: "Dr. Anjali Singh", subject: "Fluid Mechanics", leaveDetails: { fromDate: "2026-04-26", toDate: "2026-04-28", days: 3, reason: "Research", replacement: "Prof. R.K. Sharma" } },
+                { id: 66, name: "Dr. Neha Gupta", subject: "Environmental Engineering", leaveDetails: { fromDate: "2026-05-08", toDate: "2026-05-10", days: 3, reason: "Conference", replacement: "Ms. Priya Verma" } },
+                { id: 67, name: "Ms. Priya Verma", subject: "Transportation Engineering", leaveDetails: { fromDate: "2026-06-01", toDate: "2026-06-03", days: 3, reason: "Workshop", replacement: "Dr. Neha Gupta" } },
+                { id: 68, name: "Mr. Rajesh Kumar", subject: "Surveying", leaveDetails: { fromDate: "2026-05-25", toDate: "2026-05-27", days: 3, reason: "Field Work", replacement: "Dr. Anjali Singh" } }
+            ]
+        };
+        
+        // ========== HELPER FUNCTIONS ==========
+        function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+        
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.style.backgroundColor = isError ? '#ef4444' : '#10b981';
+            toast.style.opacity = '1';
+            setTimeout(() => toast.style.opacity = '0', 3000);
+        }
+        
+        // ========== TIMETABLE FUNCTIONS ==========
+        function getColorClass(subject) { if(!subject) return ''; const s=subject.toUpperCase(); if(s.includes('LUNCH')) return 'bg-lunch'; if(s.includes('OOPJ')) return 'bg-oopj'; if(s.includes('TAFL')) return 'bg-tafl'; if(s.includes('OS')) return 'bg-os'; if(s.includes('SAY')) return 'bg-say'; if(s.includes('UHVPE')) return 'bg-uhvp'; if(s.includes('CYS')) return 'bg-cys'; if(s.includes('DSJ')) return 'bg-dsj'; if(s.includes('ESE')||s.includes('MATHS')) return 'bg-maths'; if(s.includes('APT')) return 'bg-apt'; return ''; }
+        
+        function loadTimetable() {
+            const dept = document.getElementById('deptSelect').value; const year = document.getElementById('yearSelectTT').value; const semester = document.getElementById('semesterSelectTT').value; const section = document.getElementById('sectionSelectTT').value;
+            if(!dept||!year||!semester||!section) { showToast('Please select all fields'); return; }
+            let data = JSON.parse(JSON.stringify(departmentTimetables[dept] || cseTimetable));
+            const semNum = semester.replace(/[^0-9]/g, '');
+            for(let day of daysList) { for(let i=0;i<data[day].length;i++) { if(data[day][i].t && data[day][i].t!=="") data[day][i].t += ` (Sem ${semNum})`; if(data[day][i].e && data[day][i].e!=="" && data[day][i].e!=="LUNCH") data[day][i].e += `-${section}`; } }
+            let html = `<table class="timetable"><thead><tr><th>Day</th><th>09:30-10:20</th><th>10:20-11:10</th><th>11:10-12:00</th><th>12:00-12:50</th><th>12:50-1:30</th><th>1:30-2:20</th><th>02:20-3:10</th><th>03:10-4:00</th><th>04:00-4:50</th></tr></thead><tbody>`;
+            for(let day of daysList) { html += `<tr><td class="day-col">${day}</td>`; for(let i=0;i<9;i++) { const slot = data[day][i] || { s: '', t: '', e: '' }; const isLunch = slot.s === 'LUNCH'; const colorClass = getColorClass(slot.s); if(isLunch) html += `<td class="${colorClass}" style="font-size:11px;">🍽️ LUNCH<\/td>`; else html += `<td class="${colorClass}" style="font-size:11px;"><div><strong>${escapeHtml(slot.s || '—')}</strong><br><small>${escapeHtml(slot.t)}</small>${slot.e ? `<br><span style="font-size:9px;">${escapeHtml(slot.e)}</span>` : ''}</div><\/td>`; } html += `<\/tr>`; }
+            html += `</tbody><\/table>`; document.getElementById('timetableWrapper').innerHTML = html; document.getElementById('timetableInfo').innerHTML = `${dept} | ${year} Year | ${semester} Semester | Section ${section}`; showToast(`✅ Loaded timetable`);
+        }
+        
+        document.getElementById('deptSelect').addEventListener('change', function() {
+            const dept = this.value; const yearSelect = document.getElementById('yearSelectTT'); const semSelect = document.getElementById('semesterSelectTT'); const secSelect = document.getElementById('sectionSelectTT');
+            if(!dept) { yearSelect.innerHTML='<option value="">-- Select Year --</option>'; yearSelect.disabled=true; semSelect.innerHTML='<option value="">-- Select Semester --</option>'; semSelect.disabled=true; secSelect.innerHTML='<option value="">-- Select Section --</option>'; secSelect.disabled=true; return; }
+            const years = departments[dept]?.years || []; yearSelect.innerHTML='<option value="">-- Select Year --</option>'; years.forEach(y=>{ yearSelect.innerHTML+=`<option value="${y}">${y} Year</option>`; }); yearSelect.disabled=false; semSelect.innerHTML='<option value="">-- Select Semester --</option>'; semSelect.disabled=true; secSelect.innerHTML='<option value="">-- Select Section --</option>'; secSelect.disabled=true;
+        });
+        document.getElementById('yearSelectTT').addEventListener('change', function() {
+            const dept = document.getElementById('deptSelect').value; const year = this.value; const semSelect = document.getElementById('semesterSelectTT'); const secSelect = document.getElementById('sectionSelectTT');
+            if(!dept||!year) { semSelect.innerHTML='<option value="">-- Select Semester --</option>'; semSelect.disabled=true; secSelect.innerHTML='<option value="">-- Select Section --</option>'; secSelect.disabled=true; return; }
+            const sems = departments[dept]?.semesters[year] || []; semSelect.innerHTML='<option value="">-- Select Semester --</option>'; sems.forEach(s=>{ semSelect.innerHTML+=`<option value="${s}">${s} Semester</option>`; }); semSelect.disabled=false; secSelect.innerHTML='<option value="">-- Select Section --</option>'; secSelect.disabled=true;
+        });
+        document.getElementById('semesterSelectTT').addEventListener('change', function() {
+            const dept = document.getElementById('deptSelect').value; const secSelect = document.getElementById('sectionSelectTT');
+            if(!dept) { secSelect.innerHTML='<option value="">-- Select Section --</option>'; secSelect.disabled=true; return; }
+            const sections = departments[dept]?.sections || []; secSelect.innerHTML='<option value="">-- Select Section --</option>'; sections.forEach(s=>{ secSelect.innerHTML+=`<option value="${s}">Section ${s}</option>`; }); secSelect.disabled=false;
+        });
+        
+        // ========== FACULTY FUNCTIONS ==========
+        function renderFacultyTable() { let tbody=document.getElementById('facultyBody'); if(!tbody) return; tbody.innerHTML=''; facultyList.forEach((fac,idx)=>{ let row=tbody.insertRow(); row.insertCell(0).innerText=fac.sno; let c1=row.insertCell(1); c1.innerText=fac.code; c1.style.cursor='pointer'; c1.ondblclick=()=>editFacultyField(idx,'code',c1); let c2=row.insertCell(2); c2.innerText=fac.name; c2.ondblclick=()=>editFacultyField(idx,'name',c2); let c3=row.insertCell(3); c3.innerText=fac.subject; c3.ondblclick=()=>editFacultyField(idx,'subject',c3); let c4=row.insertCell(4); c4.innerText=fac.contact; c4.ondblclick=()=>editFacultyField(idx,'contact',c4); let c5=row.insertCell(5); let btn=document.createElement('button'); btn.innerHTML='<i class="fas fa-trash"></i> Delete'; btn.className='delete-faculty-btn'; btn.onclick=()=>{ if(confirm('Delete?')){ facultyList.splice(idx,1); facultyList.forEach((f,i)=>f.sno=i+1); nextSno=facultyList.length+1; saveFacultyStorage(); renderFacultyTable(); showToast('🗑️ Faculty removed'); addNotification('Faculty Deleted',`${fac.name} removed`); } }; c5.appendChild(btn); }); }
+        function editFacultyField(idx,field,cell){ let oldVal=facultyList[idx][field]; let inp=document.createElement('input'); inp.value=oldVal; inp.style.cssText='width:100%;padding:6px;border:2px solid #facc15;border-radius:8px;'; cell.innerHTML=''; cell.appendChild(inp); inp.focus(); let save=()=>{ let newVal=inp.value.trim(); if(newVal) facultyList[idx][field]=newVal; saveFacultyStorage(); renderFacultyTable(); showToast(`${field} updated`); addNotification('Faculty Updated',`${field} changed`); }; inp.addEventListener('blur',save); inp.addEventListener('keypress',(e)=>{ if(e.key==='Enter') save(); }); }
+        function addNewFaculty(){ facultyList.push({ sno: nextSno++, code: "NEW", name: "New Teacher", subject: "Subject", contact: "0000000000" }); saveFacultyStorage(); renderFacultyTable(); showToast('✅ New faculty added'); addNotification('Faculty Added','New faculty member created'); }
+        function refreshFacultyTable(){ renderFacultyTable(); showToast('🔄 Table refreshed'); }
+        function saveFacultyStorage(){ localStorage.setItem('cse_faculty_list',JSON.stringify(facultyList)); localStorage.setItem('cse_next_sno',nextSno); }
+        function loadFacultyStorage(){ let saved=localStorage.getItem('cse_faculty_list'); if(saved){ facultyList=JSON.parse(saved); nextSno=localStorage.getItem('cse_next_sno')?parseInt(localStorage.getItem('cse_next_sno')):facultyList.length+1; renderFacultyTable(); } }
+        
+        // ========== LEAVE PORTAL FUNCTIONS ==========
+        function loadTeachers() {
+            const dept = document.getElementById('departmentSelect').value;
+            if(!dept) { showToast('Please select a department', true); return; }
+            const teachers = teachersData[dept] || [];
+            renderTeacherList(teachers, dept);
+            showToast(`✅ Found ${teachers.length} teacher(s) on leave in ${dept} department`);
+        }
+        
+        function renderTeacherList(teachers, dept) {
+            const container = document.getElementById('teacherList');
+            const countSpan = document.getElementById('teacherCount');
+            if(!teachers || teachers.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-check fa-3x" style="margin-bottom: 15px; color: #cbd5e1;"></i><p>No teachers on leave in this department</p></div>';
+                countSpan.innerText = '0 teachers on leave';
+                return;
+            }
+            countSpan.innerText = `${teachers.length} teacher(s) on leave`;
+            let html = `<div class="teacher-grid">`;
+            teachers.forEach(teacher => {
+                html += `<div class="teacher-item" onclick="showLeaveDetails('${dept}', ${teacher.id})"><div class="teacher-name"><i class="fas fa-user-graduate"></i> ${escapeHtml(teacher.name)}</div><div class="teacher-subject"><i class="fas fa-book"></i> ${escapeHtml(teacher.subject)}</div></div>`;
+            });
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+        
+        function showLeaveDetails(dept, teacherId) {
+            const teachers = teachersData[dept];
+            const teacher = teachers.find(t => t.id === teacherId);
+            if(!teacher || !teacher.leaveDetails) { showToast('Leave details not found', true); return; }
+            const leave = teacher.leaveDetails;
+            const modalBody = document.getElementById('modalBody');
+            let replacementHtml = `<div class="replacement-box"><i class="fas fa-user-check"></i> <strong>Replacement Teacher(s):</strong><br>${escapeHtml(leave.replacement)} will take the classes</div>`;
+            modalBody.innerHTML = `<div class="detail-row"><div class="detail-label">Teacher Name</div><div class="detail-value">${escapeHtml(teacher.name)}</div></div><div class="detail-row"><div class="detail-label">Department</div><div class="detail-value">${escapeHtml(dept)}</div></div><div class="detail-row"><div class="detail-label">Subject</div><div class="detail-value">${escapeHtml(teacher.subject)}</div></div><div class="detail-row"><div class="detail-label">Leave Period</div><div class="detail-value">📅 ${leave.fromDate} <i class="fas fa-arrow-right"></i> ${leave.toDate}</div></div><div class="detail-row"><div class="detail-label">Total Days</div><div class="detail-value">${leave.days} day(s)</div></div><div class="detail-row"><div class="detail-label">Reason</div><div class="detail-value"><i class="fas fa-comment"></i> ${escapeHtml(leave.reason)}</div></div>${replacementHtml}`;
+            document.getElementById('leaveModal').classList.add('show');
+        }
+        
+        function closeLeaveModal() { document.getElementById('leaveModal').classList.remove('show'); }
+        
+        // ========== NOTIFICATION FUNCTIONS ==========
+        function addNotification(title,message){ let n={id:Date.now(),title,message,read:false,time:new Date().toISOString()}; notifications.unshift(n); if(notifications.length>50) notifications.pop(); localStorage.setItem('timetable_notifications',JSON.stringify(notifications)); updateNotificationUI(); showToast(`🔔 ${title}`); }
+        function deleteNotification(id){ notifications=notifications.filter(n=>n.id!==id); localStorage.setItem('timetable_notifications',JSON.stringify(notifications)); updateNotificationUI(); showToast('Deleted'); }
+        function deleteAllNotifications(){ if(confirm('Delete all?')){ notifications=[]; localStorage.setItem('timetable_notifications',JSON.stringify(notifications)); updateNotificationUI(); showToast('All deleted'); } }
+        function updateNotificationUI(){ document.getElementById('notificationCount').innerText=notifications.filter(n=>!n.read).length; let c=document.getElementById('notificationList'); if(c){ c.innerHTML=notifications.length===0?'<div class="empty-state">No notifications</div>':notifications.map(n=>`<div class="notification-item ${!n.read?'unread':''}" onclick="markAsRead(${n.id})"><div class="notification-title">${escapeHtml(n.title)}</div><div class="notification-message">${escapeHtml(n.message)}</div><div class="notification-time">${formatTimeAgo(n.time)}</div><button class="delete-notif-btn" onclick="event.stopPropagation(); deleteNotification(${n.id})"><i class="fas fa-trash"></i></button></div>`).join(''); } }
+        function markAsRead(id){ let n=notifications.find(n=>n.id===id); if(n) n.read=true; localStorage.setItem('timetable_notifications',JSON.stringify(notifications)); updateNotificationUI(); }
+        function markAllRead(){ notifications.forEach(n=>n.read=true); localStorage.setItem('timetable_notifications',JSON.stringify(notifications)); updateNotificationUI(); showToast('All marked read'); }
+        function formatTimeAgo(dateStr){ let date=new Date(dateStr), now=new Date(), mins=Math.floor((now-date)/60000); if(mins<1) return 'Just now'; if(mins<60) return `${mins} min ago`; if(mins<1440) return `${Math.floor(mins/60)} hours ago`; return `${Math.floor(mins/1440)} days ago`; }
+        
+        // ========== PROFILE FUNCTIONS ==========
+        function updateProfileUI(){ document.getElementById('profileAvatar').innerText=adminProfile.avatar; document.getElementById('dropdownAvatar').innerText=adminProfile.avatar; document.getElementById('dropdownName').innerText=adminProfile.name; document.getElementById('dropdownEmail').innerText=adminProfile.email; document.getElementById('profileNameText').innerText=adminProfile.name; }
+        function openEditProfileModal(){ document.getElementById('editProfileModal').classList.add('show'); document.getElementById('editName').value=adminProfile.name; document.getElementById('editEmail').value=adminProfile.email; closeDropdowns(); }
+        function closeEditProfileModal(){ document.getElementById('editProfileModal').classList.remove('show'); }
+        function saveProfile(){ adminProfile.name=document.getElementById('editName').value; adminProfile.email=document.getElementById('editEmail').value; adminProfile.avatar=adminProfile.name.charAt(0).toUpperCase(); localStorage.setItem('adminProfile',JSON.stringify(adminProfile)); updateProfileUI(); closeEditProfileModal(); addNotification('Profile Updated','Profile updated'); showToast('✅ Profile updated'); }
+        function openChangePasswordModal(){ document.getElementById('changePasswordModal').classList.add('show'); closeDropdowns(); }
+        function closeChangePasswordModal(){ document.getElementById('changePasswordModal').classList.remove('show'); document.getElementById('currentPassword').value=''; document.getElementById('newPassword').value=''; document.getElementById('confirmPassword').value=''; }
+        function changePassword(){ let curr=document.getElementById('currentPassword').value, newP=document.getElementById('newPassword').value, conf=document.getElementById('confirmPassword').value; if(!curr||!newP||!conf){ showToast('❌ Fill all fields'); return; } if(curr!==adminProfile.password){ showToast('❌ Current password incorrect'); return; } if(newP!==conf){ showToast('❌ Passwords do not match'); return; } if(newP.length<6){ showToast('❌ Min 6 characters'); return; } adminProfile.password=newP; localStorage.setItem('adminProfile',JSON.stringify(adminProfile)); showToast('✅ Password changed'); addNotification('Password Changed','Password updated'); closeChangePasswordModal(); }
+        
+        // ========== TAB SWITCHING ==========
+        function switchToAnalytics(){ document.getElementById('analyticsSection').style.display='block'; document.getElementById('timetableSection').style.display='none'; document.getElementById('facultySection').style.display='none'; document.getElementById('leaveSection').style.display='none'; document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active')); document.getElementById('tabAnalytics').classList.add('active'); }
+        function switchToTimetable(){ document.getElementById('analyticsSection').style.display='none'; document.getElementById('timetableSection').style.display='block'; document.getElementById('facultySection').style.display='none'; document.getElementById('leaveSection').style.display='none'; document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active')); document.getElementById('tabTimetable').classList.add('active'); }
+        function switchToFaculty(){ document.getElementById('analyticsSection').style.display='none'; document.getElementById('timetableSection').style.display='none'; document.getElementById('facultySection').style.display='block'; document.getElementById('leaveSection').style.display='none'; document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active')); document.getElementById('tabFaculty').classList.add('active'); renderFacultyTable(); }
+        function switchToLeave(){ document.getElementById('analyticsSection').style.display='none'; document.getElementById('timetableSection').style.display='none'; document.getElementById('facultySection').style.display='none'; document.getElementById('leaveSection').style.display='block'; document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active')); document.getElementById('tabLeave').classList.add('active'); }
+        function closeDropdowns(){ document.getElementById('profileDropdown').classList.remove('show'); document.getElementById('notificationDropdown').classList.remove('show'); }
+        function logout(){ if(confirm('Logout?')){ showToast('👋 Logged out'); setTimeout(()=>location.reload(),1000); } }
+        
+        // ========== EVENT LISTENERS ==========
+        document.getElementById('profileSection').addEventListener('click',(e)=>{ e.stopPropagation(); closeDropdowns(); document.getElementById('profileDropdown').classList.toggle('show'); });
+        document.getElementById('notificationBell').addEventListener('click',(e)=>{ e.stopPropagation(); closeDropdowns(); document.getElementById('notificationDropdown').classList.toggle('show'); updateNotificationUI(); });
+        document.getElementById('tabAnalytics').addEventListener('click',switchToAnalytics);
+        document.getElementById('tabTimetable').addEventListener('click',switchToTimetable);
+        document.getElementById('tabFaculty').addEventListener('click',switchToFaculty);
+        document.getElementById('tabLeave').addEventListener('click',switchToLeave);
+        document.addEventListener('click',()=>closeDropdowns());
+        window.onclick = function(event) { const modal = document.getElementById('leaveModal'); if (event.target === modal) { modal.classList.remove('show'); } }
+        
+        // ========== INITIALIZE ==========
+        loadFacultyStorage();
+        updateProfileUI();
+        updateNotificationUI();
+        
+        // Initialize leave portal with default selection
+        document.getElementById('departmentSelect').value = 'CSE';
+        loadTeachers();
+        
+        // Set default timetable
+        setTimeout(() => {
+            document.getElementById('deptSelect').value = 'CSE';
+            document.getElementById('deptSelect').dispatchEvent(new Event('change'));
+            setTimeout(() => {
+                document.getElementById('yearSelectTT').value = '4th';
+                document.getElementById('yearSelectTT').dispatchEvent(new Event('change'));
+                setTimeout(() => {
+                    document.getElementById('semesterSelectTT').value = '7th';
+                    document.getElementById('semesterSelectTT').dispatchEvent(new Event('change'));
+                    setTimeout(() => {
+                        document.getElementById('sectionSelectTT').value = 'D';
+                        loadTimetable();
+                    }, 100);
+                }, 100);
+            }, 100);
+        }, 100);
+        
+        window.loadTimetable = loadTimetable;
+        window.addNewFaculty = addNewFaculty;
+        window.refreshFacultyTable = refreshFacultyTable;
+        window.loadTeachers = loadTeachers;
+        window.showLeaveDetails = showLeaveDetails;
+        window.closeLeaveModal = closeLeaveModal;
+        window.openEditProfileModal = openEditProfileModal;
+        window.closeEditProfileModal = closeEditProfileModal;
+        window.saveProfile = saveProfile;
+        window.openChangePasswordModal = openChangePasswordModal;
+        window.closeChangePasswordModal = closeChangePasswordModal;
+        window.changePassword = changePassword;
+        window.markAsRead = markAsRead;
+        window.markAllRead = markAllRead;
+        window.deleteAllNotifications = deleteAllNotifications;
+        window.logout = logout;
+    </script>
+</body>
+</html>
